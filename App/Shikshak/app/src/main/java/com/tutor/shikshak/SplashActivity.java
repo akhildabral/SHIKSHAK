@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import static com.android.volley.VolleyLog.TAG;
 
 public class SplashActivity extends Activity {
 
@@ -19,9 +22,9 @@ public class SplashActivity extends Activity {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();  //close this activity
+                    Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();  //close this activity
             }
         }, SPLASH_TIME_OUT);
     }
