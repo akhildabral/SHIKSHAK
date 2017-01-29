@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-@XmlRootElement(name = "user")
+
+import org.json.simple.JSONObject;
+@XmlRootElement
 public class User implements Serializable {
 
    private static final long serialVersionUID = 1L;
@@ -36,7 +38,10 @@ public class User implements Serializable {
    
    @Override
    public String toString() {
-		return "Track [title=" + id + ", singer=" + name + "]";
+		JSONObject json = new JSONObject();
+		json.put("id", id);
+		json.put("name",name);
+		return json.toJSONString();
 	}
   	
 }
