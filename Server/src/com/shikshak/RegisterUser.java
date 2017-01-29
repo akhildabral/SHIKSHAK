@@ -11,9 +11,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 
-import com.shikshak.User;
-
 import org.json.simple.JSONObject;
+
+import com.shikshak.model.User;
 
 @Path("/Register")
 public class RegisterUser {
