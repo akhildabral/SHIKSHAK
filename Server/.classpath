@@ -45,5 +45,6 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/jersey-entity-filtering-2.17.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/jersey-media-json-jackson-2.17.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Lokesh/Documents/GitHub/SHIKSHAK/Server/WebContent/WEB-INF/lib/com.mysql.jdbc_5.1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Lokesh/Documents/GitHub/SHIKSHAK/Server/WebContent/WEB-INF/lib/jackson-all-1.9.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

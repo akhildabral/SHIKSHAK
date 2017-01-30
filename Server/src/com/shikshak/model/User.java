@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @XmlRootElement
 public class User implements Serializable {
 
@@ -18,6 +17,7 @@ public class User implements Serializable {
 	private String phone;
 	private String account;
 	private String picture;
+	private String email;
 
 	public User() {
 		super();
@@ -96,6 +96,15 @@ public class User implements Serializable {
 		this.picture = picture;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	@XmlElement
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
 		JSONObject json = new JSONObject();
@@ -106,6 +115,7 @@ public class User implements Serializable {
 		json.put("phone", phone);
 		json.put("account", account);
 		json.put("picture", picture);
+		json.put("email", email);
 		return json.toJSONString();
 	}
 }

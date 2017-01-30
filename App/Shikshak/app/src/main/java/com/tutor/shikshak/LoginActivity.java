@@ -2,6 +2,7 @@ package com.tutor.shikshak;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +26,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -249,5 +261,105 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public String photoUrl(){
         return personPhotoUrl;
+    }
+
+    public void loginErrorToast(){
+    }
+
+    private class SendDataToServer extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String JsonResponse = null;
+            String JsonDATA = params[0];
+            String msg = params[1];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL("http://hmkcode.appspot.com/jsonservlet");
+                Log.e("test---------", msg);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+
+                writer.close();
+
+                //getting the response
+                InputStream inputStream = urlConnection.getInputStream();
+
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                JsonResponse = buffer.toString();
+                Log.i("TAG", JsonResponse);
+
+                return JsonResponse;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ERROR", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+/*        private String getOutputFromUrl(String url) {
+            StringBuffer output = new StringBuffer("");
+            InputStream stream = null;
+
+            try {
+                URL url = new URL("url");
+                URLConnection connection = url.openConnection();
+
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                    InputStream stream = getHttpConnection(url);
+                    BufferedReader buffer = new BufferedReader(
+                            new InputStreamReader(stream));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null)
+                        output.append(s);
+                }
+                return output.toString();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return output.toString();
+        }*/
     }
 }
