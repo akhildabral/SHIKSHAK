@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tutor.shikshak.SplashActivity"
+    android:background="#2d2d2d"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="537dp"
+        android:layout_weight="0.95">
+
+        <ImageView
+            android:id="@+id/splash_logo"
+            android:src="@mipmap/shikshak_web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="85dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/splah_text"
+            android:text="Shikshak"
+            android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+            android:textSize="30dp"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/splash_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:textStyle="normal|bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:text="© 2016 SHIKSHAK ALL RIGHTS RESERVED"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/textView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</LinearLayout>

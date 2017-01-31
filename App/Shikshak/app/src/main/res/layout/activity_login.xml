@@ -1,0 +1,195 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".LoginActivity"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="97dp"
+        android:layout_weight="0.94">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:srcCompat="@mipmap/shikshak_web"
+            android:id="@+id/imageView10"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/textView8" />
+
+        <TextView
+            android:text="Shikshak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            android:id="@+id/textView8"
+            android:textSize="30dp"
+            android:fontFamily="cursive"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="256dp">
+
+        <CheckBox
+            android:text="Remember Me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox"
+            android:layout_alignBaseline="@+id/textView6"
+            android:layout_alignBottom="@+id/textView6" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/text_field_username"
+            android:hint="Email"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="18dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/textfield_password"
+            android:hint="Password"
+            android:layout_below="@+id/text_field_username"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:text="Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_below="@+id/textfield_password"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:text="Forgot Password ?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:id="@+id/textView6"
+            android:layout_below="@+id/loginButton"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/divider"
+            android:id="@+id/imageView12"
+            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/textView6" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="127dp">
+
+        <LinearLayout
+            android:id="@+id/llProfile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imgProfilePic"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:layout_weight="2" >
+
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/txtEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="18dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_sign_out"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_logout_from_google"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_revoke_access"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_revoke_access"
+            android:visibility="gone" />
+
+        <TextView
+            android:text="Register with your Google account."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:layout_above="@+id/btn_sign_in"
+            android:layout_toEndOf="@+id/llProfile"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="11dp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_sign_in"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Create a New Account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView5"
+            android:fontFamily="sans-serif"
+            android:textSize="16dp"
+            android:layout_above="@+id/textView7"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
+
+    </RelativeLayout>
+
+    <!--    <ImageView
+        android:id="@+id/login_logo"
+        android:src="@mipmap/shishak_logo"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />-->
+
+</LinearLayout>
