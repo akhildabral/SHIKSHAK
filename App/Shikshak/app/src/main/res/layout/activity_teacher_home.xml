@@ -10,4 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.tutor.shikshak.TeacherHomeActivity">
 
+    <TextView
+        android:id="@+id/mytxt"
+        android:text="teacher page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

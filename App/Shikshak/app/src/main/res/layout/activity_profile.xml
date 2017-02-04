@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
@@ -10,83 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.tutor.shikshak.ProfileActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/mytxt"
+        android:text="profile page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/fname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:hint="First Name"/>
-
-        <EditText
-            android:id="@+id/lname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:hint="Last Name"/>
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:hint="Email"/>
-
-        <EditText
-            android:id="@+id/password"
-            android:hint="Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
-        <EditText
-            android:id="@+id/confirm_password"
-            android:hint="Confirm Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
-        <EditText
-            android:id="@+id/phone"
-            android:hint="Phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose an option"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
-        <RadioGroup
-            android:paddingTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_teacher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Teacher"
-                android:layout_weight="0.5"/>
-            <RadioButton android:id="@+id/radio_student"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"
-                android:text="Student" />
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/button_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit"/>
-
-    </LinearLayout>
-
-
-</ScrollView>
+</RelativeLayout>

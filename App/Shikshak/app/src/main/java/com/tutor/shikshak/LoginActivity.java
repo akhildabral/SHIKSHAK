@@ -1,10 +1,12 @@
 package com.tutor.shikshak;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,6 +30,9 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,6 +44,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static android.R.attr.name;
+import static android.R.id.message;
+import static java.security.AccessController.getContext;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -47,10 +57,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressDialog mProgressDialog;
 
     private SignInButton btnSignIn;
-    private Button btnSignOut, btnRevokeAccess;
-    private LinearLayout llProfileLayout;
-    private ImageView imgProfilePic;
-    private TextView txtName, txtEmail;
+    /*private Button btnSignOut, btnRevokeAccess;*/
+    private Button btnLogIn;
+    /*private LinearLayout llProfileLayout;*/
+    /*private ImageView imgProfilePic;*/
+    /*private TextView txtName, txtEmail;*/
 
     private static String personName;
     private static String personPhotoUrl;
@@ -62,16 +73,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
-        btnSignOut = (Button) findViewById(R.id.btn_sign_out);
-        btnRevokeAccess = (Button) findViewById(R.id.btn_revoke_access);
-        llProfileLayout = (LinearLayout) findViewById(R.id.llProfile);
+        btnLogIn = (Button) findViewById(R.id.btn_log_in);
+        /*btnSignOut = (Button) findViewById(R.id.btn_sign_out);
+        btnRevokeAccess = (Button) findViewById(R.id.btn_revoke_access);*/
+      /*  llProfileLayout = (LinearLayout) findViewById(R.id.llProfile);
         imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
         txtName = (TextView) findViewById(R.id.txtName);
-        txtEmail = (TextView) findViewById(R.id.txtEmail);
+        txtEmail = (TextView) findViewById(R.id.txtEmail);*/
 
         btnSignIn.setOnClickListener(this);
-        btnSignOut.setOnClickListener(this);
-        btnRevokeAccess.setOnClickListener(this);
+        /*btnSignOut.setOnClickListener(this);
+        btnRevokeAccess.setOnClickListener(this);*/
+        btnLogIn.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -94,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void signOut() {
+/*    private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -102,9 +115,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         updateUI(false);
                     }
                 });
-    }
+    }*/
 
-    private void revokeAccess() {
+/*    private void revokeAccess() {
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -112,14 +125,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         updateUI(false);
                     }
                 });
-    }
+    }*/
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-
             Log.e(TAG, "display name: " + acct.getDisplayName());
 
             personName = acct.getDisplayName();
@@ -128,15 +140,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             Log.e(TAG, "Name: " + personName + ", email: " + email + ", Image: " + personPhotoUrl);
 
-            txtName.setText(personName);
+/*            txtName.setText(personName);
             txtEmail.setText(email);
             Glide.with(getApplicationContext()).load(personPhotoUrl)
                     .thumbnail(0.5f)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgProfilePic);
+                    .into(imgProfilePic);*/
 
             updateUI(true);
+            //need to make changes for sign up and log in
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
@@ -152,13 +165,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 signIn();
                 break;
 
-            case R.id.btn_sign_out:
+            case R.id.btn_log_in:
+                //call home page
+                break;
+
+/*            case R.id.btn_revoke_access:
                 signOut();
                 break;
 
             case R.id.btn_revoke_access:
                 revokeAccess();
-                break;
+                break;*/
         }
     }
 
@@ -224,30 +241,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
-           //Log.e(TAG, "--------------- Name: " + personName + ", email: " + email + ", Image: " + personPhotoUrl);
+            //new user, send to profile activity
+            senddatatoserver();
 
-            /*btnSignIn.setVisibility(View.GONE);
-            btnSignOut.setVisibility(View.VISIBLE);
-            btnRevokeAccess.setVisibility(View.VISIBLE);
-            llProfileLayout.setVisibility(View.VISIBLE);*/
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                   //Log.e(TAG, "+++++++++++++ Name: " + personName + ", email: " + email + ", Image: " + personPhotoUrl);
-                        Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
-                        startActivity(i);
-                        finish();  //close this activity
-                }
-            }, 1);
 
 
         } else {
+            //returned user, send to home activity
             btnSignIn.setVisibility(View.VISIBLE);
-            btnSignOut.setVisibility(View.GONE);
+/*            btnSignOut.setVisibility(View.GONE);
             btnRevokeAccess.setVisibility(View.GONE);
-            llProfileLayout.setVisibility(View.GONE);
+            llProfileLayout.setVisibility(View.GONE);*/
         }
     }
 
@@ -263,7 +267,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return personPhotoUrl;
     }
 
-    public void loginErrorToast(){
+    public void senddatatoserver() {
+        JSONObject json_obj = new JSONObject();
+
+        try {
+            json_obj.put("email", email);
+            Log.e("send email:", email);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (json_obj.length() > 0) {
+            new SendDataToServer().execute(String.valueOf(json_obj));
+        }
     }
 
     private class SendDataToServer extends AsyncTask<String,String,String> {
@@ -272,18 +289,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         protected String doInBackground(String... params) {
             String JsonResponse = null;
             String JsonDATA = params[0];
-            String msg = params[1];
+            /*String msg = params[1];*/
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://hmkcode.appspot.com/jsonservlet");
-                Log.e("test---------", msg);
+                URL url = new URL("http://10.0.2.2:8080/Shikshak/rest/Signup/validate");
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
-                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestMethod("PUT");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
 
@@ -307,12 +324,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return null;
                 }
                 JsonResponse = buffer.toString();
-                Log.i("TAG", JsonResponse);
+               /* Log.i("TAG", JsonResponse);*/
+               /* Log.e("TAG", JsonResponse);*/
+
+                JSONObject emp=(new JSONObject(JsonResponse));
+                String response=emp.getString("response");
+                Log.e("RESULT", response);
+
+                if(response.equals("true")){
+
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                            startActivity(i);
+                            finish();  //close this activity
+                        }
+                    }, 1);
+                }
+
+                else {
+                   /* CharSequence text = "You are already registered.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(this, text, duration);
+                    toast.show();*/
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, "hello.......", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                            startActivity(i);
+                            finish();  //clos
+                        }
+                    });
+
+                }
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
                 if (urlConnection != null) {
@@ -329,37 +388,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             return null;
         }
-
-/*        private String getOutputFromUrl(String url) {
-            StringBuffer output = new StringBuffer("");
-            InputStream stream = null;
-
-            try {
-                URL url = new URL("url");
-                URLConnection connection = url.openConnection();
-
-                HttpURLConnection httpConnection = (HttpURLConnection) connection;
-                httpConnection.setRequestMethod("GET");
-                httpConnection.connect();
-
-                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    stream = httpConnection.getInputStream();
-                    InputStream stream = getHttpConnection(url);
-                    BufferedReader buffer = new BufferedReader(
-                            new InputStreamReader(stream));
-                    String s = "";
-                    while ((s = buffer.readLine()) != null)
-                        output.append(s);
-                }
-                return output.toString();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return output.toString();
-        }*/
     }
 }
