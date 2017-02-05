@@ -295,7 +295,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://10.0.2.2:8080/Shikshak/rest/Signup/validate");
+                URL url = new URL("http://192.168.0.104:8080/Shikshak/rest/Signup/validate");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
@@ -333,7 +333,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if(response.equals("true")){
 
-                    new Handler().postDelayed(new Runnable() {
+                    Handler handler = new Handler(Looper.getMainLooper());
+
+                    handler.post(new Runnable() {
 
                         @Override
                         public void run() {
@@ -341,15 +343,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(i);
                             finish();  //close this activity
                         }
-                    }, 1);
+                    });
                 }
 
                 else {
-                   /* CharSequence text = "You are already registered.";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(this, text, duration);
-                    toast.show();*/
 
                     Handler handler = new Handler(Looper.getMainLooper());
 
