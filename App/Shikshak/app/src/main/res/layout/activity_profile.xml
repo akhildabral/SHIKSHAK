@@ -20,42 +20,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:hint="First Name"/>
+            android:hint="First Name"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/lname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:hint="Last Name"/>
+            android:hint="Last Name"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:hint="Email"/>
+            android:hint="Email"
+            android:enabled="false"/>
 
         <EditText
             android:id="@+id/password"
             android:hint="Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text=""
+            android:inputType="textPassword"/>
 
         <EditText
             android:id="@+id/confirm_password"
             android:hint="Confirm Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text=""
+            android:inputType="textPassword"/>
 
         <EditText
             android:id="@+id/phone"
             android:hint="Phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text=""
+            android:inputType="phone"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -72,13 +78,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Teacher"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5"
+                android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/radio_student"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
                 android:layout_height="wrap_content"
-                android:text="Student" />
+                android:text="Student"
+                android:onClick="onRadioButtonClicked"/>
         </RadioGroup>
+
+        <ImageView
+            android:id="@+id/imgProfilePic"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/button_profile"
@@ -87,6 +101,5 @@
             android:text="Submit"/>
 
     </LinearLayout>
-
 
 </ScrollView>

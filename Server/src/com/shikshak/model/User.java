@@ -11,8 +11,8 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
-	private String first_name;
-	private String last_name;
+	private String firstName;
+	private String lastName;
 	private String password;
 	private String phone;
 	private String account;
@@ -23,10 +23,10 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String first_name, String last_name, String password, String phone, String account, String picture) {
+	public User(String firstName, String lastName, String password, String phone, String account, String picture) {
 		super();
-		this.first_name = first_name;
-		this.last_name = last_name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.password = password;
 		this.phone = phone;
 		this.account = account;
@@ -42,22 +42,22 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getFirst_name() {
-		return first_name;
+	public String getfirstName() {
+		return firstName;
 	}
 
 	@XmlElement
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setfirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLast_name() {
-		return last_name;
+	public String getlastName() {
+		return lastName;
 	}
 
 	@XmlElement
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setlastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getPassword() {
@@ -109,8 +109,8 @@ public class User implements Serializable {
 	public String toString() {
 		JSONObject json = new JSONObject();
 		json.put("id", id);
-		json.put("firstName", first_name);
-		json.put("lastName", last_name);
+		json.put("firstName", firstName);
+		json.put("lastName", lastName);
 		json.put("password", password);
 		json.put("phone", phone);
 		json.put("account", account);

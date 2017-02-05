@@ -13,25 +13,23 @@ public class DatabaseConnection {
 	static private Statement stmt = null;
 	static private ResultSet rs = null;
 
-	public ResultSet openConnection(String str) {
+	public Statement openConnection() {
 		try {
 			System.out.println("Open connection");
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery(str);
+			/*rs = stmt.executeQuery(str);*/
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rs;
+		return stmt;
 	}
 
-	public void closeConnection(ResultSet rs) {
+	public void closeConnection() {
 		try {
-			rs.close();
-			stmt.close();
 			conn.close();
 			System.out.println("connection closed.");
 		} catch (SQLException e) {

@@ -255,15 +255,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public String displayName1(){
+    public String userName(){
         return personName;
     }
 
-    public String email(){
+    public String userEmail(){
         return email;
     }
 
-    public String photoUrl(){
+    public String userPhotoUrl(){
         return personPhotoUrl;
     }
 
@@ -332,6 +332,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("RESULT", response);
 
                 if(response.equals("true")){
+                    //new user
 
                     Handler handler = new Handler(Looper.getMainLooper());
 
@@ -339,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         @Override
                         public void run() {
-                            Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                            Intent i = new Intent(LoginActivity.this, ProfileActivity.class);
                             startActivity(i);
                             finish();  //close this activity
                         }
@@ -347,6 +348,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 else {
+                    // user is in database
 
                     Handler handler = new Handler(Looper.getMainLooper());
 

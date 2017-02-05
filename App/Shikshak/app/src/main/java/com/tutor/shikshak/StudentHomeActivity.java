@@ -16,8 +16,8 @@ public class StudentHomeActivity extends AppCompatActivity {
 
         mtext = (TextView) findViewById(R.id.mytxt);
 
-        LoginActivity la = new LoginActivity();
+/*        LoginActivity la = new LoginActivity();
         String str = la.displayName1();
-        mtext.setText(str);
+        mtext.setText(str);*/
     }
 }
