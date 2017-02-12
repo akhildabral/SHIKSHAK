@@ -1,7 +1,6 @@
 package com.tutor.shikshak;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,13 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,11 +21,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -44,10 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static android.R.attr.name;
-import static android.R.id.message;
-import static java.security.AccessController.getContext;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -57,12 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressDialog mProgressDialog;
 
     private SignInButton btnSignIn;
-    /*private Button btnSignOut, btnRevokeAccess;*/
     private Button btnLogIn;
-    /*private LinearLayout llProfileLayout;*/
-    /*private ImageView imgProfilePic;*/
-    /*private TextView txtName, txtEmail;*/
-
     private static String personName;
     private static String personPhotoUrl;
     private static String email;
@@ -74,16 +55,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
         btnLogIn = (Button) findViewById(R.id.btn_log_in);
-        /*btnSignOut = (Button) findViewById(R.id.btn_sign_out);
-        btnRevokeAccess = (Button) findViewById(R.id.btn_revoke_access);*/
-      /*  llProfileLayout = (LinearLayout) findViewById(R.id.llProfile);
-        imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
-        txtName = (TextView) findViewById(R.id.txtName);
-        txtEmail = (TextView) findViewById(R.id.txtEmail);*/
 
         btnSignIn.setOnClickListener(this);
-        /*btnSignOut.setOnClickListener(this);
-        btnRevokeAccess.setOnClickListener(this);*/
         btnLogIn.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -106,27 +79,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
-/*    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }*/
-
-/*    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }*/
-
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -135,18 +87,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.e(TAG, "display name: " + acct.getDisplayName());
 
             personName = acct.getDisplayName();
-            personPhotoUrl = acct.getPhotoUrl().toString();
+         //   personPhotoUrl = acct.getPhotoUrl().toString();
             email = acct.getEmail();
 
             Log.e(TAG, "Name: " + personName + ", email: " + email + ", Image: " + personPhotoUrl);
-
-/*            txtName.setText(personName);
-            txtEmail.setText(email);
-            Glide.with(getApplicationContext()).load(personPhotoUrl)
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgProfilePic);*/
 
             updateUI(true);
             //need to make changes for sign up and log in
@@ -168,14 +112,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_log_in:
                 //call home page
                 break;
-
-/*            case R.id.btn_revoke_access:
-                signOut();
-                break;
-
-            case R.id.btn_revoke_access:
-                revokeAccess();
-                break;*/
         }
     }
 
@@ -242,16 +178,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
             //new user, send to profile activity
+            Log.e("TAG", "New User");
             senddatatoserver();
-
-
 
         } else {
             //returned user, send to home activity
+            Log.e("TAG", "Old User");
             btnSignIn.setVisibility(View.VISIBLE);
-/*            btnSignOut.setVisibility(View.GONE);
-            btnRevokeAccess.setVisibility(View.GONE);
-            llProfileLayout.setVisibility(View.GONE);*/
         }
     }
 
@@ -295,8 +228,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.104:8080/Shikshak/rest/Signup/validate");
+                URL url = new URL("http://192.168.0.102:8080/Shikshak/rest/Signup/validate");
 
+                Log.e("TAG", "data sent to server");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 

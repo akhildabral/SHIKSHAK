@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "667750090065",
+    "project_id": "shikshak-155921"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667750090065:android:eae436f00dd96ede",
+        "android_client_info": {
+          "package_name": "com.tutor.shikshak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667750090065-miuf6l7s74bb4spi0e0fc9ip1a6o01r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tutor.shikshak",
+            "certificate_hash": "D91CBDB94BB3F8A1945517EEBF9D43C4B493FE68"
+          }
+        },
+        {
+          "client_id": "667750090065-1lddppdp6lrbsf0q6m281o1njcs5lg5e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

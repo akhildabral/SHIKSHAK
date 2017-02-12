@@ -31,6 +31,7 @@ public class SignupService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response userValidation(User userData) {
 		try {
+			System.out.println("......................");
 			int flag = 0;
 			String emailRcvd = "";
 
