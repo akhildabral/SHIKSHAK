@@ -96,8 +96,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if((iPassword.equals(iCfrnPassword))){
             if(iAccount.equals("student") | iAccount.equals("teacher")){
                 try {
-                    jsonObj.put("firstName", iFname);
-                    jsonObj.put("lastName", iLname);
+                    jsonObj.put("fname", iFname);
+                    jsonObj.put("lname", iLname);
                     jsonObj.put("password", iPassword);
                     jsonObj.put("phone", iPhone);
                     jsonObj.put("account", iAccount);
@@ -145,12 +145,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.104:8080/Shikshak/rest/Signup/register");
+                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/add");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
-                urlConnection.setRequestMethod("PUT");
+                urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
 
@@ -175,34 +175,38 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 JsonResponse = buffer.toString();
-                JSONObject emp=(new JSONObject(JsonResponse));
-                String response=emp.getString("response");
+                String str = JsonResponse.toString().trim().toLowerCase();
 
-                if(response.equals("student")){
+                Log.e("response---", str);
 
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
+                if(str.equals("true") || str.equals(1) || str.equals("1")){
+                    if (txtaccount.equals("student")) {
 
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(ProfileActivity.this, StudentHomeActivity.class);
-                            startActivity(i);
-                            finish();  //close this activity
-                        }
-                    });
-                }
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
 
-                else if (response.equals("teacher")) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(ProfileActivity.this, StudentHomeActivity.class);
+                                startActivity(i);
+                                finish();  //close this activity
+                            }
+                        });
+                    } else if (txtaccount.equals("teacher")) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(ProfileActivity.this, TeacherHomeActivity.class);
-                            startActivity(i);
-                            finish();  //close this activity
-                        }
-                    });
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(ProfileActivity.this, TeacherHomeActivity.class);
+                                startActivity(i);
+                                finish();  //close this activity
+                            }
+                        });
+                    }
+                    else {
+                        Toast.makeText(ProfileActivity.this, "Error: Choose a radio button.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 else {
@@ -221,7 +225,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 if (urlConnection != null) {

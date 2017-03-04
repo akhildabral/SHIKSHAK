@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -47,6 +48,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static String personName;
     private static String personPhotoUrl;
     private static String email;
+    private EditText userName;
+    private EditText userPasscode;
+    private String inputEmail, inputPasscode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
         btnLogIn = (Button) findViewById(R.id.btn_log_in);
+
+        userName = (EditText) findViewById(R.id.text_field_username);
+        userPasscode = (EditText) findViewById(R.id.textfield_password);
 
         btnSignIn.setOnClickListener(this);
         btnLogIn.setOnClickListener(this);
@@ -80,23 +87,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
+
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.e(TAG, "display name: " + acct.getDisplayName());
+            //Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
 
             personName = acct.getDisplayName();
-         //   personPhotoUrl = acct.getPhotoUrl().toString();
+            personPhotoUrl = acct.getPhotoUrl().toString();
             email = acct.getEmail();
-
-            Log.e(TAG, "Name: " + personName + ", email: " + email + ", Image: " + personPhotoUrl);
-
-            updateUI(true);
-            //need to make changes for sign up and log in
+            senddatatoserver();
         } else {
             // Signed out, show unauthenticated UI.
-            updateUI(false);
+            Log.e(TAG, "User is not logged in.");
         }
     }
 
@@ -110,7 +115,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btn_log_in:
-                //call home page
+                inputEmail = userName.getText().toString();
+                inputPasscode = userPasscode.getText().toString();
+                sendemailtoserver();
                 break;
         }
     }
@@ -175,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void updateUI(boolean isSignedIn) {
+/*    private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
             //new user, send to profile activity
             Log.e("TAG", "New User");
@@ -186,17 +193,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.e("TAG", "Old User");
             btnSignIn.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
     public String userName(){
+        this.personName = personName;
         return personName;
     }
 
     public String userEmail(){
+        this.email = email;
         return email;
     }
 
     public String userPhotoUrl(){
+        this.personPhotoUrl = personPhotoUrl;
         return personPhotoUrl;
     }
 
@@ -222,30 +232,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         protected String doInBackground(String... params) {
             String JsonResponse = null;
             String JsonDATA = params[0];
-            /*String msg = params[1];*/
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.102:8080/Shikshak/rest/Signup/validate");
+                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/signup/"+email);
 
-                Log.e("TAG", "data sent to server");
+               // Log.e("TAG", url.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
-                urlConnection.setRequestMethod("PUT");
+                urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
 
                 Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
                 writer.write(JsonDATA);
-
                 writer.close();
 
                 //getting the response
                 InputStream inputStream = urlConnection.getInputStream();
-
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
                     return null;
@@ -259,44 +266,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 JsonResponse = buffer.toString();
                /* Log.i("TAG", JsonResponse);*/
-               /* Log.e("TAG", JsonResponse);*/
+                Log.e("RESPONSE", JsonResponse);
 
-                JSONObject emp=(new JSONObject(JsonResponse));
-                String response=emp.getString("response");
-                Log.e("RESULT", response);
+                String str = JsonResponse.toString().trim().toLowerCase();
 
-                if(response.equals("true")){
-                    //new user
+//                JSONObject emp=(new JSONObject(JsonResponse));
+//                String response=emp.getString("response");
+//                Log.e("RESULT", response);
+
+                if(str.equals("false")){
 
                     Handler handler = new Handler(Looper.getMainLooper());
-
                     handler.post(new Runnable() {
 
                         @Override
                         public void run() {
                             Intent i = new Intent(LoginActivity.this, ProfileActivity.class);
                             startActivity(i);
-                            finish();  //close this activity
+                            finish();
                         }
                     });
                 }
 
                 else {
-                    // user is in database
-
+                    JsonResponse = JsonResponse.replace("[","").replace("]","");
+                    JSONObject emp=(new JSONObject(JsonResponse));
+                    String response=emp.getString("account").toLowerCase().trim();
+                    Log.e("RESULT", response);
                     Handler handler = new Handler(Looper.getMainLooper());
 
-                    handler.post(new Runnable() {
+                    if(response.equals("student")){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
 
-                        @Override
-                        public void run() {
-                            Toast.makeText(LoginActivity.this, "hello.......", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
-                            startActivity(i);
-                            finish();  //clos
-                        }
-                    });
+                    else if(response.equals("teacher")){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(LoginActivity.this, TeacherHomeActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
 
+                    else {
+                        Toast.makeText(LoginActivity.this, "An error occurred.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 return JsonResponse;
@@ -304,7 +327,133 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ERROR", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public void sendemailtoserver() {
+        JSONObject json_obj = new JSONObject();
+
+        try {
+            json_obj.put("email", inputEmail);
+            json_obj.put("password", inputPasscode);
+            Log.e("send email:", inputEmail);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (json_obj.length() > 0) {
+            new SendMailToServer().execute(String.valueOf(json_obj));
+        }
+    }
+
+    private class SendMailToServer extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String JsonResponse = null;
+            String JsonDATA = params[0];
+            Log.e("send data:", JsonDATA);
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/signin");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                writer.close();
+
+                //getting the response
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                JsonResponse = buffer.toString();
+                String str = JsonResponse.toString().trim().toLowerCase();
+
+                if(str.equals("false")){
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, "Incorrect Credentials.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                else {
+                    JsonResponse = JsonResponse.replace("[","").replace("]","");
+                    JSONObject emp=(new JSONObject(JsonResponse));
+                    String response=emp.getString("account").toLowerCase().trim();
+                    Log.e("RESULT", response);
+                    Handler handler = new Handler(Looper.getMainLooper());
+
+                    if(response.equals("student")){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
+
+                    else if(response.equals("teacher")){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(LoginActivity.this, TeacherHomeActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
+
+                    else {
+                        Toast.makeText(LoginActivity.this, "An error occurred in Signin.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                return JsonResponse;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 if (urlConnection != null) {
