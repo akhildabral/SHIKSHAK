@@ -14,27 +14,32 @@
         android:theme="@style/AppTheme">
 
         <!-- Splash screen -->
-        <activity android:name=".SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="portrait" >
+        <activity
+            android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Login screen -->
-        <activity android:name=".LoginActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:screenOrientation="portrait" >
-            </activity>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.StudentHomeActivity" />
+        <activity android:name=".activity.TeacherHomeActivity" />
 
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".StudentHomeActivity" />
-        <activity android:name=".TeacherHomeActivity"></activity>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.PrivacyPolicyActivity"></activity>
     </application>
 
 </manifest>

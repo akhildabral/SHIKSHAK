@@ -1,10 +1,9 @@
-package com.tutor.shikshak;
+package com.tutor.shikshak.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tutor.shikshak.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

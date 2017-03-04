@@ -4,7 +4,7 @@
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tutor.shikshak.SplashActivity"
+    tools:context="com.tutor.shikshak.activity.SplashActivity"
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 

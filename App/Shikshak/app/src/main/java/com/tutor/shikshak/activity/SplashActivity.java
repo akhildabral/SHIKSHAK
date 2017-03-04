@@ -1,13 +1,11 @@
-package com.tutor.shikshak;
+package com.tutor.shikshak.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import static com.android.volley.VolleyLog.TAG;
+import com.tutor.shikshak.R;
 
 public class SplashActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package com.tutor.shikshak;
+package com.tutor.shikshak.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.tutor.shikshak.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;

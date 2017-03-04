@@ -1,7 +1,9 @@
-package com.tutor.shikshak;
+package com.tutor.shikshak.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.tutor.shikshak.R;
 
 public class TeacherHomeActivity extends AppCompatActivity {
 
