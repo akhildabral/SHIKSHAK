@@ -98,8 +98,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
 
             personName = acct.getDisplayName();
-            personPhotoUrl = acct.getPhotoUrl().toString();
+            //personPhotoUrl = acct.getPhotoUrl().toString();
             email = acct.getEmail();
+           // Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
             senddatatoserver();
         } else {
             // Signed out, show unauthenticated UI.
