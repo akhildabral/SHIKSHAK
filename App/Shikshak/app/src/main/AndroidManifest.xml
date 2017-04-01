@@ -28,10 +28,9 @@
         <!-- Login screen -->
         <activity
             android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.StudentHomeActivity" />
+        <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.TeacherHomeActivity" />
 
         <meta-data
@@ -39,7 +38,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.PrivacyPolicyActivity"></activity>
+        <activity android:name=".activity.PrivacyPolicyActivity" />
+        <activity android:name=".activity.CoachingActivity" android:label="@string/app_name"/>
+        <activity android:name=".activity.BatchActivity" android:label="@string/app_name"></activity>
     </application>
 
 </manifest>

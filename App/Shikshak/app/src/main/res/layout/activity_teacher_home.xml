@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tutor.shikshak.activity.StudentHomeActivity">
+    tools:context="com.tutor.shikshak.activity.HomeActivity">
 
     <TextView
         android:id="@+id/mytxt"

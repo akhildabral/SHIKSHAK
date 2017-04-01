@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -14,9 +14,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import com.tutor.shikshak.fragment.PhotosFragment;
 import com.tutor.shikshak.fragment.SettingsFragment;
 import com.tutor.shikshak.other.CircleTransform;
 
-public class StudentHomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener, PhotosFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener, PhotosFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, View.OnClickListener{
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
@@ -39,7 +42,10 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
     private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+   // private FloatingActionButton fab;
+   private Boolean isFabOpen = false;
+    private FloatingActionButton fab,fab1,fab2;
+    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
     // urls to load navigation header background image
     // and profile image
@@ -67,10 +73,21 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_home);
+        setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab1 = (FloatingActionButton)findViewById(R.id.coaching);
+        fab2 = (FloatingActionButton)findViewById(R.id.batch);
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+        fab.setOnClickListener(this);
+        fab1.setOnClickListener(this);
+        fab2.setOnClickListener(this);
 
         mHandler = new Handler();
 
@@ -88,13 +105,13 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         // load nav menu header data
         loadNavHeader();
@@ -106,6 +123,42 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
             navItemIndex = 0;
             CURRENT_TAG = TAG_HOME;
             loadHomeFragment();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.fab:
+                animateFAB();
+                break;
+            case R.id.coaching:
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(HomeActivity.this, CoachingActivity.class);
+                        startActivity(i);
+                        finish();  //close this activity
+                    }
+                });
+               // Log.d("Raj", "Fab 1");
+                break;
+            case R.id.batch:
+                Handler handler1 = new Handler(Looper.getMainLooper());
+                handler1.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(HomeActivity.this, BatchActivity.class);
+                        startActivity(i);
+                        //finish();  //close this activity
+                    }
+                });
+                //Log.d("Raj", "Fab 2");
+                break;
         }
     }
 
@@ -259,12 +312,12 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
                         break;
                     case R.id.nav_about_us:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(StudentHomeActivity.this, AboutUsActivity.class));
+                        startActivity(new Intent(HomeActivity.this, AboutUsActivity.class));
                         drawer.closeDrawers();
                         return true;
                     case R.id.nav_privacy_policy:
                         // launch new intent instead of loading fragment
-                        startActivity(new Intent(StudentHomeActivity.this, PrivacyPolicyActivity.class));
+                        startActivity(new Intent(HomeActivity.this, PrivacyPolicyActivity.class));
                         drawer.closeDrawers();
                         return true;
                     default:
@@ -344,7 +397,9 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
         if (navItemIndex == 3) {
             getMenuInflater().inflate(R.menu.notifications, menu);
         }
-        return true;
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+//        return true;
     }
 
     @Override
@@ -386,5 +441,30 @@ public class StudentHomeActivity extends AppCompatActivity implements HomeFragme
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void animateFAB(){
+
+        if(isFabOpen){
+
+            fab.startAnimation(rotate_backward);
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isFabOpen = false;
+            Log.d("Raj", "close");
+
+        } else {
+
+            fab.startAnimation(rotate_forward);
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isFabOpen = true;
+            Log.d("Raj","open");
+
+        }
     }
 }

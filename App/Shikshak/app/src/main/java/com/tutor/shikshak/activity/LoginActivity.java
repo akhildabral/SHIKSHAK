@@ -37,6 +37,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static com.tutor.shikshak.other.Constants.logInUrl;
+import static com.tutor.shikshak.other.Constants.signInUrl;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -120,6 +123,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_log_in:
                 inputEmail = userName.getText().toString();
                 inputPasscode = userPasscode.getText().toString();
+
+                if (inputEmail.matches("")) {
+                    Toast.makeText(this, "You did not enter the Email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (inputPasscode.matches("")) {
+                    Toast.makeText(this, "You did not enter the Password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 sendemailtoserver();
                 break;
         }
@@ -240,9 +252,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/signup/"+email);
+                URL url = new URL(signInUrl +email);
 
-               // Log.e("TAG", url.toString());
+                Log.e("TAG", url.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
@@ -268,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return null;
                 }
                 JsonResponse = buffer.toString();
-               /* Log.i("TAG", JsonResponse);*/
+                Log.i("TAG", JsonResponse);
                 Log.e("RESPONSE", JsonResponse);
 
                 String str = JsonResponse.toString().trim().toLowerCase();
@@ -292,22 +304,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 else {
-                    JsonResponse = JsonResponse.replace("[","").replace("]","");
-                    JSONObject emp=(new JSONObject(JsonResponse));
-                    String response=emp.getString("account").toLowerCase().trim();
-                    Log.e("RESULT", response);
+//                    JsonResponse = JsonResponse.replace("[","").replace("]","");
+//                    JSONObject emp=(new JSONObject(JsonResponse));
+//                    String response=emp.getString("account").toLowerCase().trim();
+//                    Log.e("RESULT", response);
                     Handler handler = new Handler(Looper.getMainLooper());
-
-                    if(response.equals("student")){
+//
+//                    if(response.equals("student")){
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(i);
                                 finish();
                             }
                         });
-                    }
+                  /*  }
 
                     else if(response.equals("teacher")){
                         handler.post(new Runnable() {
@@ -322,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     else {
                         Toast.makeText(LoginActivity.this, "An error occurred.", Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
 
                 return JsonResponse;
@@ -378,7 +390,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/signin");
+                URL url = new URL(logInUrl);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
@@ -418,22 +430,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 else {
-                    JsonResponse = JsonResponse.replace("[","").replace("]","");
-                    JSONObject emp=(new JSONObject(JsonResponse));
-                    String response=emp.getString("account").toLowerCase().trim();
-                    Log.e("RESULT", response);
+//                    JsonResponse = JsonResponse.replace("[","").replace("]","");
+//                    JSONObject emp=(new JSONObject(JsonResponse));
+//                    String response=emp.getString("account").toLowerCase().trim();
+//                    Log.e("RESULT", response);
                     Handler handler = new Handler(Looper.getMainLooper());
-
-                    if(response.equals("student")){
+//
+//                    if(response.equals("student")){
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(LoginActivity.this, StudentHomeActivity.class);
+                                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(i);
                                 finish();
                             }
                         });
-                    }
+/*                    }
 
                     else if(response.equals("teacher")){
                         handler.post(new Runnable() {
@@ -448,7 +460,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     else {
                         Toast.makeText(LoginActivity.this, "An error occurred in Signin.", Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
 
                 return JsonResponse;

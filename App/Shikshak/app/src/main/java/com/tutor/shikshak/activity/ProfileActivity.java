@@ -32,6 +32,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static com.tutor.shikshak.other.Constants.addUserUrl;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText txtfname, txtlname, txtemail, txtpassword, txtcofmpassword, txtphone;
@@ -145,7 +147,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("http://192.168.0.104/Shikshak/db-operation.php/add");
+                URL url = new URL(addUserUrl);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
@@ -187,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                             @Override
                             public void run() {
-                                Intent i = new Intent(ProfileActivity.this, StudentHomeActivity.class);
+                                Intent i = new Intent(ProfileActivity.this, HomeActivity.class);
                                 startActivity(i);
                                 finish();  //close this activity
                             }

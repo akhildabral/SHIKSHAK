@@ -9,16 +9,20 @@ $app = new App();
 
 $app->get('/', 'getUsers');
 
- $app->post('/signup/{email}', function($request, $response, $args) {
-     getSignUp($args['email']);
+ $app->post('/signin/{email}', function($request, $response, $args) {
+     getSignIn($args['email']);
  });
 
 $app->post('/add', function($request, $response, $args) {
     addUser($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
-$app->post('/signin', function($request, $response, $args) {
-    getSignIn($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+$app->post('/login', function($request, $response, $args) {
+    getLogIn($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/addCoaching', function($request, $response, $args) {
+    addCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
 $app->put('/update_employee', function($request, $response, $args) {
@@ -40,9 +44,9 @@ function getUsers() {
     echo json_encode($data);
 }
 
-function getSignUp($email) {
+function getSignIn($email) {
     $db = connect_db();
-    $sql = "SELECT account FROM user WHERE `email` = '$email'";
+    $sql = "SELECT id FROM user WHERE `email` = '$email'";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
@@ -65,14 +69,27 @@ function addUser($data) {
         echo "false";
 }
 
-function getSignIn($data) {
+function getLogIn($data) {
     $db = connect_db();
-    $sql = "SELECT account FROM user WHERE `email` = '$data[email]' AND `password` = '$data[password]'";
+    $sql = "SELECT id FROM user WHERE `email` = '$data[email]' AND `password` = '$data[password]'";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
     if (!empty($data))
         echo json_encode($data);
+    else
+        echo "false";
+}
+
+function addCoaching($data) {
+    $db = connect_db();
+    $sql = "insert into coaching (name,colony,city,address,owner)"
+            . " VALUES('$data[name]','$data[colony]','$data[city]','$data[address]','$data[owner]')";
+    $exe = $db->query($sql);
+    $last_id = $db->insert_id;
+    $db = null;
+    if (!empty($last_id))
+        echo "true";
     else
         echo "false";
 }
