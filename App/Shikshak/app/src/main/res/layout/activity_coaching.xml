@@ -38,26 +38,25 @@
             android:inputType="text" />
 
         <Spinner
-            android:id="@+id/planets_spinner"
+            android:id="@+id/spinner_colony"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"/>
 
         <EditText
-            android:id="@+id/city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:hint="City"
-            android:inputType="text"/>
-
-        <EditText
             android:id="@+id/fullAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:hint="Address"
+            android:hint="Full Address"
             android:inputType="text"/>
 
         <Button

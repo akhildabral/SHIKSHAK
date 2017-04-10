@@ -38,11 +38,12 @@ import static com.tutor.shikshak.other.Constants.getColony;
 public class CoachingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
-    private EditText coachingName, colonyName, city, address;
+    private EditText coachingName, address;
     private String coaching_name, colony_name, city_name, full_address;
     private Button button_coaching;
-    private Spinner spinner;
+    private Spinner colony, city;
     private ArrayList cityArray = new ArrayList();
+    private ArrayList colonyArray = new ArrayList();
 
     JSONObject jsonObj = new JSONObject();
 
@@ -56,9 +57,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
         setToolbarTitle();
 
         coachingName = (EditText) findViewById(R.id.coachingName);
-        //colonyName = (EditText) findViewById(R.id.colony);
-        spinner = (Spinner) findViewById(R.id.planets_spinner);
-        city = (EditText) findViewById(R.id.city);
+        colony = (Spinner) findViewById(R.id.spinner_colony);
+        city = (Spinner) findViewById(R.id.spinner_city);
         address = (EditText) findViewById(R.id.fullAddress);
         button_coaching = (Button) findViewById(R.id.button_coaching);
         button_coaching.setOnClickListener(this);
@@ -72,14 +72,15 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
 //        ArrayAdapter<String> adapter = new ArrayAdapter(this,cityArr);
 
         cityArray.add("Choose City");
-        Log.e("array---", String.valueOf(cityArray));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cityArray);
+        colonyArray.add("Choose Colony");
+       // Log.e("array---", String.valueOf(cityArray));
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cityArray);
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        city.setAdapter(cityAdapter);
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
+        ArrayAdapter<String> colonyAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, colonyArray);
+        colonyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        colony.setAdapter(colonyAdapter);
         //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 //        spinner.setAdapter(
@@ -93,6 +94,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
        // spinner.setOnItemClickListener(this);
 
 
+
+
     }
 
     private void setToolbarTitle() {
@@ -102,8 +105,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         coaching_name = coachingName.getText().toString();
-        colony_name = colonyName.getText().toString();
-        city_name = city.getText().toString();
+        colony_name = String.valueOf(colony.getSelectedItem());
+        city_name = String.valueOf(city.getSelectedItem());
         full_address = address.getText().toString();
 
         try {
@@ -116,9 +119,9 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
         catch (JSONException e) {
             e.printStackTrace();
         }
-//        if (jsonObj.length() > 0) {
-//            new SendDataToServer().execute(String.valueOf(jsonObj));
-//        }
+        if (jsonObj.length() > 0) {
+            new SendDataToServer().execute(String.valueOf(jsonObj));
+        }
     }
 
     private class SendDataToServer extends AsyncTask<String,String,String> {
@@ -144,7 +147,7 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
                 Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
                 writer.write(JsonDATA);
                 writer.close();
-               // Log.e("error---", JsonDATA);
+                Log.e("error---", JsonDATA);
 
                 //getting the response
                 InputStream inputStream = urlConnection.getInputStream();
@@ -164,7 +167,7 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
                 JsonResponse = buffer.toString();
                 String str = JsonResponse.toString().trim().toLowerCase();
 
-                Log.e("response---", str);
+               // Log.e("response---", str);
 
                 if(str.equals("true") || str.equals(1) || str.equals("1")){
 
@@ -257,11 +260,11 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
 
                 for(int i=0;i<city.length;i++){
                     JSONObject emp=(new JSONObject(city[i]));
-                    String response=emp.getString("name").toLowerCase().trim();
+                    String response=emp.getString("name").toUpperCase().trim();
                     String.valueOf(cityArray.add(response));
                 }
                 cityArray.remove("Choose City");
-                Log.e("RESULT", String.valueOf(cityArray));
+              //  Log.e("RESULT", String.valueOf(cityArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -324,9 +327,15 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
 
                 JsonResponse = buffer.toString();
                 JsonResponse = JsonResponse.replace("[","").replace("]","");
-                String str = JsonResponse.toString().trim().toLowerCase();
 
-                Log.e("response---", str);
+                String[] colony=JsonResponse.split(",");
+
+                for(int i=0;i<colony.length;i++){
+                    JSONObject emp=(new JSONObject(colony[i]));
+                    String response=emp.getString("name").toUpperCase().trim();
+                    String.valueOf(colonyArray.add(response));
+                }
+                colonyArray.remove("Choose Colony");
 
                 return JsonResponse;
             } catch (MalformedURLException e) {

@@ -141,6 +141,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                     public void run() {
                         Intent i = new Intent(HomeActivity.this, CoachingActivity.class);
                         startActivity(i);
+                        animateFAB();
                        // finish();  //close this activity
                     }
                 });
@@ -154,6 +155,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                     public void run() {
                         Intent i = new Intent(HomeActivity.this, BatchActivity.class);
                         startActivity(i);
+                        animateFAB();
                         //finish();  //close this activity
                     }
                 });

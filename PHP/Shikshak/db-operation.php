@@ -25,9 +25,13 @@ $app->post('/addCoaching', function($request, $response, $args) {
     addCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
-$app->post('/getCoaching', function($request, $response, $args) {
-    getCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+$app->post('/addBatch', function($request, $response, $args) {
+    addBatch($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
+
+ $app->post('/getCoaching/{email}', function($request, $response, $args) {
+     getCoaching($args['email']);
+ });
 
 $app->post('/getCity', function($request, $response, $args) {
     getCity($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
@@ -56,9 +60,9 @@ function getUsers() {
     echo json_encode($data);
 }
 
-function getCoaching() {
+function getCoaching($email) {
     $db = connect_db();
-    $sql = "SELECT * FROM coaching ORDER BY `name`";
+    $sql = "SELECT name FROM coaching WHERE `owner` = '$email' ORDER BY `name`";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
@@ -124,6 +128,19 @@ function addCoaching($data) {
     $db = connect_db();
     $sql = "insert into coaching (name,colony,city,address,owner)"
             . " VALUES('$data[name]','$data[colony]','$data[city]','$data[address]','$data[owner]')";
+    $exe = $db->query($sql);
+    $last_id = $db->insert_id;
+    $db = null;
+    if (!empty($last_id))
+        echo "true";
+    else
+        echo "false";
+}
+
+function addBatch($data) {
+    $db = connect_db();
+    $sql = "insert into batch (batch_name,batch_sub,batch_time,batch_fee,coaching_name,email)"
+            . " VALUES('$data[batch_name]','$data[batch_sub]','$data[batch_time]','$data[batch_fee]','$data[coaching_name]','$data[email]')";
     $exe = $db->query($sql);
     $last_id = $db->insert_id;
     $db = null;

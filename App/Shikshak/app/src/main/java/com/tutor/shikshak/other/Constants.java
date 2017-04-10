@@ -10,7 +10,8 @@ public interface Constants {
     public static final String logInUrl = "http://192.168.0.102/Shikshak/db-operation.php/login";
     public static final String addUserUrl = "http://192.168.0.102/Shikshak/db-operation.php/add";
     public static final String addCoachingUrl = "http://192.168.0.102/Shikshak/db-operation.php/addCoaching";
-    public static final String getCoaching = "http://192.168.0.102/Shikshak/db-operation.php/getCoaching";
+    public static final String addBatchUrl = "http://192.168.0.102/Shikshak/db-operation.php/addBatch";
+    public static final String getCoaching = "http://192.168.0.102/Shikshak/db-operation.php/getCoaching/";
     public static final String getCity = "http://192.168.0.102/Shikshak/db-operation.php/getCity";
     public static final String getColony = "http://192.168.0.102/Shikshak/db-operation.php/getColony";
 }
