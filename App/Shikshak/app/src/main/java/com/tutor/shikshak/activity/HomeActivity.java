@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                     public void run() {
                         Intent i = new Intent(HomeActivity.this, CoachingActivity.class);
                         startActivity(i);
-                        finish();  //close this activity
+                       // finish();  //close this activity
                     }
                 });
                // Log.d("Raj", "Fab 1");

@@ -25,6 +25,18 @@ $app->post('/addCoaching', function($request, $response, $args) {
     addCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
+$app->post('/getCoaching', function($request, $response, $args) {
+    getCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/getCity', function($request, $response, $args) {
+    getCity($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/getColony', function($request, $response, $args) {
+    getColony($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
 $app->put('/update_employee', function($request, $response, $args) {
     update_employee($request->getParsedBody());
 });
@@ -38,6 +50,33 @@ $app->run();
 function getUsers() {
     $db = connect_db();
     $sql = "SELECT * FROM user ORDER BY `fname`";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getCoaching() {
+    $db = connect_db();
+    $sql = "SELECT * FROM coaching ORDER BY `name`";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getCity() {
+    $db = connect_db();
+    $sql = "SELECT name FROM city order by name";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getColony() {
+    $db = connect_db();
+    $sql = "SELECT DISTINCT name FROM colony order by name";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
