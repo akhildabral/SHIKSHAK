@@ -39,10 +39,14 @@
 
         <activity android:name=".activity.AboutUsActivity" />
         <activity android:name=".activity.PrivacyPolicyActivity" />
-        <activity android:name=".activity.CoachingActivity"
+        <activity
+            android:name=".activity.CoachingActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.tutor.shikshak.activity.HomeActivity"/>
-        <activity android:name=".activity.BatchActivity" android:label="@string/app_name"></activity>
+            android:parentActivityName=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.BatchActivity"
+            android:label="@string/app_name" />
+        <activity android:name=".activity.AddStudentActivity"></activity>
     </application>
 
 </manifest>

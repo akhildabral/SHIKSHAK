@@ -2,8 +2,6 @@ package com.tutor.shikshak.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.tutor.shikshak.R;
 
@@ -31,82 +28,87 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.tutor.shikshak.other.Constants.addBatchUrl;
+import static com.tutor.shikshak.other.Constants.getBatch;
 import static com.tutor.shikshak.other.Constants.getCoaching;
-import static com.tutor.shikshak.other.Constants.getSubject;
+import static com.tutor.shikshak.other.Constants.getStudent;
+import static com.tutor.shikshak.other.Constants.getTeacher;
 
-public class BatchActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddStudentActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar toolbar;
-    private EditText batch_name, batch_time, batch_fees;
-    private String coachingB, batchB, subjectB, timeB, feesB;
+    private EditText batch_subject, batch_time;
+    private String coaching, batch, teacher, subject, time, student;
     private Button buttonBatch;
-    private Spinner coaching_spinner, subject_spinner;
+    private Spinner coaching_spinner, batch_spinner, teacher_spinner, student_spinner;
+
     private ArrayList coachingArray = new ArrayList();
-    private ArrayList subjectArray = new ArrayList();
+    private ArrayList batchArray = new ArrayList();
+    private ArrayList teacherArray = new ArrayList();
+    private ArrayList studentArray = new ArrayList();
 
     JSONObject jsonObj = new JSONObject();
     private String userEmail = new LoginActivity().userEmail();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_batch);
+        setContentView(R.layout.activity_add_student);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setToolbarTitle();
 
-        batch_name = (EditText) findViewById(R.id.batchName);
-        batch_time = (EditText) findViewById(R.id.time);
-        batch_fees = (EditText) findViewById(R.id.fees);
-        coaching_spinner = (Spinner) findViewById(R.id.spinner_coaching_batch);
-        subject_spinner = (Spinner) findViewById(R.id.spinner_subject);
-        buttonBatch = (Button) findViewById(R.id.button_batch);
-        buttonBatch.setOnClickListener(this);
+        batch_subject = (EditText) findViewById(R.id.choose_subject);
+        batch_time = (EditText) findViewById(R.id.choose_time);
+        buttonBatch = (Button) findViewById(R.id.button_submit);
+        coaching_spinner = (Spinner) findViewById(R.id.choose_coaching);
+        batch_spinner = (Spinner) findViewById(R.id.choose_batch);
+        teacher_spinner = (Spinner) findViewById(R.id.choose_teacher);
+        student_spinner = (Spinner) findViewById(R.id.choose_student);
 
-        sendEmail();
+        sendEmailForCoaching();
         coachingArray.add("Choose Coaching");
-        subjectArray.add("Choose Subject");
-
         ArrayAdapter<String> coachingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, coachingArray);
         coachingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coaching_spinner.setAdapter(coachingAdapter);
 
-        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectArray);
-        subjectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subject_spinner.setAdapter(subjectAdapter);
+        batchArray.add("Choose Batch");
+        coaching = String.valueOf(coaching_spinner.getSelectedItem());
+        if(!coaching.equals("") || !coaching.equals("Choose Coaching")){
+            Log.e("Coaching Name:", coaching);
+            sendCoachingForBatch(coaching);
+        }
+        ArrayAdapter<String> batchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, batchArray);
+        batchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        batch_spinner.setAdapter(batchAdapter);
+
+        teacherArray.add("Choose Teacher");
+        batch = String.valueOf(batch_spinner.getSelectedItem());
+        if(!batch.equals("") || !batch.equals("Choose Batch")){
+            Log.e("Batch Name:", batch);
+            sendBatchForTeacher(batch);
+        }
+        ArrayAdapter<String> teacherAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teacherArray);
+        teacherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        teacher_spinner.setAdapter(teacherAdapter);
+
+        studentArray.add("Choose Student");
+        ArrayAdapter<String> studentAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, studentArray);
+        studentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        student_spinner.setAdapter(studentAdapter);
     }
 
     private void setToolbarTitle() {
-        getSupportActionBar().setTitle("Create a Batch");
+        getSupportActionBar().setTitle("Add Student");
     }
 
     @Override
     public void onClick(View v) {
-        coachingB = String.valueOf(coaching_spinner.getSelectedItem());
-        batchB = batch_name.getText().toString();
-        subjectB = String.valueOf(subject_spinner.getSelectedItem());
-        timeB = batch_time.getText().toString();
-        feesB = batch_fees.getText().toString();
 
-        try {
-            jsonObj.put("coaching_name", coachingB);
-            jsonObj.put("batch_name", batchB);
-            jsonObj.put("batch_sub", subjectB);
-            jsonObj.put("batch_time", timeB);
-            jsonObj.put("batch_fee", feesB);
-            jsonObj.put("email", userEmail);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (jsonObj.length() > 0) {
-            new SendDataToServer().execute(String.valueOf(jsonObj));
-        }
     }
 
-    public void sendEmail() {
+    public void sendEmailForCoaching() {
         JSONObject json_obj = new JSONObject();
 
         try {
@@ -118,101 +120,37 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
 
         if (json_obj.length() > 0) {
             new GetCoachingFromServer().execute(String.valueOf(json_obj));
-            new GetSubjectFromServer().execute();
         }
     }
 
-    private class SendDataToServer extends AsyncTask<String,String,String> {
+    public void sendCoachingForBatch(String str) {
+        JSONObject json_obj = new JSONObject();
 
-        @Override
-        protected String doInBackground(String... params) {
-            String JsonResponse = null;
-            String JsonDATA = params[0];
+        try {
+            json_obj.put("coaching_name", str.toUpperCase());
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
+        if (json_obj.length() > 0) {
+            new GetBatchFromServer().execute(String.valueOf(json_obj));
+        }
+    }
 
-            try {
-                URL url = new URL(addBatchUrl);
+    public void sendBatchForTeacher(String str) {
+        JSONObject json_obj = new JSONObject();
 
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
+        try {
+            json_obj.put("batch_name", str.toLowerCase());
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestProperty("Accept", "application/json");
-
-                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
-                writer.write(JsonDATA);
-                writer.close();
-               // Log.e("error---", JsonDATA);
-
-                //getting the response
-                InputStream inputStream = urlConnection.getInputStream();
-
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-                String inputLine;
-                while ((inputLine = reader.readLine()) != null)
-                    buffer.append(inputLine + "\n");
-                if (buffer.length() == 0) {
-                    return null;
-                }
-
-                JsonResponse = buffer.toString();
-                String str = JsonResponse.toString().trim().toLowerCase();
-
-                // Log.e("response---", str);
-
-                if(str.equals("true") || str.equals(1) || str.equals("1")){
-
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-//                                Intent i = new Intent(CoachingActivity.this, HomeActivity.class);
-//                                startActivity(i);
-                            finish();  //close this activity
-                        }
-                    });
-                }
-
-                else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Toast.makeText(BatchActivity.this, "Error in Batch Creation", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-                return JsonResponse;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("ERROR", "Error closing stream", e);
-                    }
-                }
-            }
-
-            return null;
+        if (json_obj.length() > 0) {
+            new GetTeacherFromServer().execute(String.valueOf(json_obj));
+            new GetStudentFromServer().execute(String.valueOf(json_obj));
         }
     }
 
@@ -228,7 +166,6 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
 
             try {
                 URL url = new URL(getCoaching + userEmail);
-
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
@@ -265,7 +202,7 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
                     String response=emp.getString("name").toUpperCase().trim();
                     String.valueOf(coachingArray.add(response));
                 }
-                coachingArray.remove("Choose Coaching");
+                //coachingArray.remove("Choose Coaching");
                 //  Log.e("RESULT", String.valueOf(cityArray));
 
                 return JsonResponse;
@@ -292,24 +229,103 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private class GetSubjectFromServer extends AsyncTask<String,String,String> {
+    private class GetBatchFromServer extends AsyncTask<String,String,String> {
 
         @Override
         protected String doInBackground(String... params) {
             String JsonResponse = null;
+            String JsonDATA = params[0];
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             try {
-                URL url = new URL(getSubject);
-
+                URL url = new URL(getBatch + userEmail);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                writer.close();
+
+                //getting the response
+                InputStream inputStream = urlConnection.getInputStream();
+
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    return null;
+                }
+
+                JsonResponse = buffer.toString();
+                JsonResponse = JsonResponse.replace("[","").replace("]","");
+
+                String[] str=JsonResponse.split(",");
+
+                for(int i=0;i<str.length;i++){
+                    JSONObject emp=(new JSONObject(str[i]));
+                    String response=emp.getString("batch_name").toUpperCase().trim();
+                    String.valueOf(batchArray.add(response));
+                }
+                //coachingArray.remove("Choose Coaching");
+                //  Log.e("RESULT", String.valueOf(cityArray));
+
+                return JsonResponse;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ERROR", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private class GetTeacherFromServer extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String JsonResponse = null;
+            String JsonDATA = params[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(getTeacher);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                writer.close();
 
                 //getting the response
                 InputStream inputStream = urlConnection.getInputStream();
@@ -333,11 +349,88 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
 
                 for(int i=0;i<city.length;i++){
                     JSONObject emp=(new JSONObject(city[i]));
-                    String response=emp.getString("subject_name").toUpperCase().trim();
-                    String.valueOf(subjectArray.add(response));
+                    String fname=emp.getString("fname").toUpperCase().trim();
+                    String email=emp.getString("email").toLowerCase().trim();
+                    String.valueOf(teacherArray.add(fname + ", "+email));
                 }
-                subjectArray.remove("Choose City");
-                //  Log.e("RESULT", String.valueOf(cityArray));
+                //coachingArray.remove("Choose Coaching");
+                Log.e("Teacher Array", String.valueOf(teacherArray));
+
+                return JsonResponse;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ERROR", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private class GetStudentFromServer extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String JsonResponse = null;
+            String JsonDATA = params[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(getStudent);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                writer.close();
+
+                //getting the response
+                InputStream inputStream = urlConnection.getInputStream();
+
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    return null;
+                }
+
+                JsonResponse = buffer.toString();
+                JsonResponse = JsonResponse.replace("[","").replace("]","");
+
+                String[] city=JsonResponse.split(",");
+
+                for(int i=0;i<city.length;i++){
+                    JSONObject emp=(new JSONObject(city[i]));
+                    String fname=emp.getString("fname").toUpperCase().trim();
+                    String email=emp.getString("email").toUpperCase().trim();
+                    String.valueOf(studentArray.add(fname+", "+email));
+                }
+                //coachingArray.remove("Choose Coaching");
+                Log.e("Student Array", String.valueOf(studentArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -363,4 +456,3 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 }
-

@@ -28,13 +28,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tutor.shikshak.R;
 import com.tutor.shikshak.fragment.HomeFragment;
+import com.tutor.shikshak.fragment.JoinCoachingFragment;
 import com.tutor.shikshak.fragment.MoviesFragment;
 import com.tutor.shikshak.fragment.NotificationsFragment;
-import com.tutor.shikshak.fragment.PhotosFragment;
 import com.tutor.shikshak.fragment.SettingsFragment;
 import com.tutor.shikshak.other.CircleTransform;
 
-public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener, PhotosFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, View.OnClickListener{
+public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener, JoinCoachingFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, View.OnClickListener{
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     private Toolbar toolbar;
    // private FloatingActionButton fab;
    private Boolean isFabOpen = false;
-    private FloatingActionButton fab,fab1,fab2;
+    private FloatingActionButton fab,fab1,fab2,fab3;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
     // urls to load navigation header background image
@@ -81,6 +81,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fab1 = (FloatingActionButton)findViewById(R.id.coaching);
         fab2 = (FloatingActionButton)findViewById(R.id.batch);
+        fab3 = (FloatingActionButton)findViewById(R.id.addStudent);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
@@ -88,6 +89,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
         fab.setOnClickListener(this);
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
+        fab3.setOnClickListener(this);
 
         mHandler = new Handler();
 
@@ -160,6 +162,18 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                     }
                 });
                 //Log.d("Raj", "Fab 2");
+                break;
+            case R.id.addStudent:
+                Handler handler2 = new Handler(Looper.getMainLooper());
+                handler2.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(HomeActivity.this, AddStudentActivity.class);
+                        startActivity(i);
+                        animateFAB();
+                    }
+                });
                 break;
         }
     }
@@ -253,8 +267,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                 return homeFragment;
             case 1:
                 // photos
-                PhotosFragment photosFragment = new PhotosFragment();
-                return photosFragment;
+                JoinCoachingFragment joinCoachingFragment = new JoinCoachingFragment();
+                return joinCoachingFragment;
             case 2:
                 // movies fragment
                 MoviesFragment moviesFragment = new MoviesFragment();
@@ -296,7 +310,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
                         navItemIndex = 0;
                         CURRENT_TAG = TAG_HOME;
                         break;
-                    case R.id.nav_photos:
+                    case R.id.nav_joinCoaching:
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_PHOTOS;
                         break;
@@ -452,8 +466,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             fab.startAnimation(rotate_backward);
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
+            fab3.startAnimation(fab_close);
             fab1.setClickable(false);
             fab2.setClickable(false);
+            fab3.setClickable(false);
             isFabOpen = false;
             Log.d("Raj", "close");
 
@@ -462,8 +478,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
             fab.startAnimation(rotate_forward);
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
+            fab3.startAnimation(fab_open);
             fab1.setClickable(true);
             fab2.setClickable(true);
+            fab3.setClickable(true);
             isFabOpen = true;
             Log.d("Raj","open");
 

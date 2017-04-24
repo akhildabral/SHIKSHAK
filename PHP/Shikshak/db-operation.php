@@ -33,12 +33,28 @@ $app->post('/addBatch', function($request, $response, $args) {
      getCoaching($args['email']);
  });
 
+  $app->post('/getBatch/{email}', function($request, $response, $args) {
+     getBatch($args['email']);
+ });
+
+$app->post('/getTeacher', function($request, $response, $args) {
+    getTeacher($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/getStudent', function($request, $response, $args) {
+    getStudent($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
 $app->post('/getCity', function($request, $response, $args) {
     getCity($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
 $app->post('/getColony', function($request, $response, $args) {
     getColony($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/getSubject', function($request, $response, $args) {
+    getSubject($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
 $app->put('/update_employee', function($request, $response, $args) {
@@ -69,6 +85,15 @@ function getCoaching($email) {
     echo json_encode($data);
 }
 
+function getBatch($email) {
+    $db = connect_db();
+    $sql = "SELECT batch_name FROM batch WHERE `email` = '$email' ORDER BY `batch_name`";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
 function getCity() {
     $db = connect_db();
     $sql = "SELECT name FROM city order by name";
@@ -81,6 +106,15 @@ function getCity() {
 function getColony() {
     $db = connect_db();
     $sql = "SELECT DISTINCT name FROM colony order by name";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getSubject() {
+    $db = connect_db();
+    $sql = "SELECT DISTINCT subject_name FROM subject order by subject_name";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
@@ -148,6 +182,25 @@ function addBatch($data) {
         echo "true";
     else
         echo "false";
+}
+
+function getTeacher($data) {
+    $db = connect_db();
+    $sql = "select fname, email from user where email = (select email from user_request where relation = 'teacher' AND batch = (select batch_id from batch where batch_name = '$data[batch_name]'))";
+    // join
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getStudent($data) {
+    $db = connect_db();
+// join    $sql = "select fname, email from user where email = (select email from user_request where relation = 'student' AND batch = (select batch_id from batch where batch_name = '$data[batch_name]'))";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
 }
 
 function update_employee($data) {
