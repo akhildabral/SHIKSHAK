@@ -90,20 +90,32 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
         timeB = batch_time.getText().toString();
         feesB = batch_fees.getText().toString();
 
-        try {
-            jsonObj.put("coaching_name", coachingB);
-            jsonObj.put("batch_name", batchB);
-            jsonObj.put("batch_sub", subjectB);
-            jsonObj.put("batch_time", timeB);
-            jsonObj.put("batch_fee", feesB);
-            jsonObj.put("email", userEmail);
+        if(!coachingB.equals("Choose Coaching") && !batchB.equals(null) && !subjectB.equals("Choose Subject") && !timeB.equals(null) && !feesB.equals(null)) {
+            try {
+                jsonObj.put("coaching_name", coachingB);
+                jsonObj.put("batch_name", batchB);
+                jsonObj.put("batch_sub", subjectB);
+                jsonObj.put("batch_time", timeB);
+                jsonObj.put("batch_fee", feesB);
+                jsonObj.put("email", userEmail);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (jsonObj.length() > 0) {
+                new SendDataToServer().execute(String.valueOf(jsonObj));
+            }
         }
-        catch (JSONException e) {
-            e.printStackTrace();
+        else {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(BatchActivity.this, "All fields are mandatory", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
-        if (jsonObj.length() > 0) {
-            new SendDataToServer().execute(String.valueOf(jsonObj));
-        }
+
     }
 
     public void sendEmail() {

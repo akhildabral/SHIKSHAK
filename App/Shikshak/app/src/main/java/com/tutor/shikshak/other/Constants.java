@@ -18,6 +18,5 @@ public interface Constants {
     public static final String getCity = "http://192.168.0.102/Shikshak/db-operation.php/getCity";
     public static final String getColony = "http://192.168.0.102/Shikshak/db-operation.php/getColony";
     public static final String getSubject = "http://192.168.0.102/Shikshak/db-operation.php/getSubject";
-    public static final String getBatchSubject = "http://192.168.0.102/Shikshak/db-operation.php/getBatchSubject";
-    public static final String getBatchTime = "http://192.168.0.102/Shikshak/db-operation.php/getBatchTime";
+    public static final String addCoachingRecord = "http://192.168.0.102/Shikshak/db-operation.php/addCoachingRecord";
 }

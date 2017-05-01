@@ -81,21 +81,6 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
         ArrayAdapter<String> colonyAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, colonyArray);
         colonyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colony.setAdapter(colonyAdapter);
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-//        spinner.setAdapter(
-//                new NothingSelectedSpinnerAdapter(
-//                        adapter,
-//                        R.layout.contact_spinner_row_nothing_selected,
-//                        // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-//                        this));
-// Apply the adapter to the spinner
-      //  spinner.setAdapter(adapter);
-       // spinner.setOnItemClickListener(this);
-
-
-
-
     }
 
     private void setToolbarTitle() {
@@ -109,6 +94,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
         city_name = String.valueOf(city.getSelectedItem());
         full_address = address.getText().toString();
 
+        if(!coaching_name.equals(null) && !colony_name.equals("Choose Colony") && !city_name.equals("Choose City") && !full_address.equals(null)){
+
         try {
             jsonObj.put("name", coaching_name);
             jsonObj.put("colony", colony_name);
@@ -121,6 +108,16 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
         }
         if (jsonObj.length() > 0) {
             new SendDataToServer().execute(String.valueOf(jsonObj));
+        }}
+        else {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(CoachingActivity.this, "All fields are mandatory", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

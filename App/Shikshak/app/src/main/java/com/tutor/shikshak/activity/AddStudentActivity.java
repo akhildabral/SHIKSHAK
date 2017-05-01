@@ -2,6 +2,8 @@ package com.tutor.shikshak.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.tutor.shikshak.other.Constants.addCoachingRecord;
 import static com.tutor.shikshak.other.Constants.getBatch;
 import static com.tutor.shikshak.other.Constants.getCoaching;
 import static com.tutor.shikshak.other.Constants.getStudent;
@@ -64,6 +67,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
         batch_spinner = (Spinner) findViewById(R.id.choose_batch);
         teacher_spinner = (Spinner) findViewById(R.id.choose_teacher);
         student_spinner = (Spinner) findViewById(R.id.choose_student);
+        buttonBatch.setOnClickListener(this);
 
         sendEmailForCoaching();
         coachingArray.add("Choose Coaching");
@@ -81,7 +85,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                 coaching = String.valueOf(coaching_spinner.getSelectedItem());
                // Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
                 if((!coaching.equals("Choose Coaching"))){
-                    Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
                     batchArray.clear();
                     batch_spinner.setSelection(0);
                     batchArray.add("Choose Batch");
@@ -133,7 +137,24 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
         ArrayAdapter<String> studentAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, studentArray);
         studentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         student_spinner.setAdapter(studentAdapter);
+
+        teacher_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                teacher = String.valueOf(teacher_spinner.getSelectedItem());
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {  }
+        });
+
+        student_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                student = String.valueOf(student_spinner.getSelectedItem());
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {  }
+        });
     }
+
 
     private void setToolbarTitle() {
         getSupportActionBar().setTitle("Add Student");
@@ -141,7 +162,31 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        //subject = batch_subject.getText().toString();
+        if(!coaching.equals("Choose Coaching") && !batch.equals("Choose Batch") && !teacher.equals("Choose Teacher") && !student.equals("Choose Student")){
+            try {
+                jsonObj.put("coaching", coaching);
+                jsonObj.put("batch", batch);
+                jsonObj.put("student", student.toLowerCase());
+                jsonObj.put("teacher", teacher.toLowerCase());
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (jsonObj.length() > 0) {
+                new SendDataToServer().execute(String.valueOf(jsonObj));
+            }
+
+        }
+        else {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(AddStudentActivity.this, "Select all fields", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public void sendEmailForCoaching() {
@@ -381,16 +426,22 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 JsonResponse = buffer.toString();
-                Log.e("Teacher Array 1", JsonResponse);
                 JsonResponse = JsonResponse.replace("[","").replace("]","");
-                Log.e("Teacher Array 2", JsonResponse);
 
-                JSONObject emp=(new JSONObject(JsonResponse));
+                String[] city=JsonResponse.split(",");
+
+                for(int i=0;i<city.length;i++){
+                    JSONObject emp=(new JSONObject(city[i]));
+                    String response=emp.getString("email").toUpperCase().trim();
+                    String.valueOf(teacherArray.add(response));
+                }
+
+/*                JSONObject emp=(new JSONObject(JsonResponse));
                 String response1=emp.getString("fname").toLowerCase().trim();
                 String response2=emp.getString("email").toLowerCase().trim();
                 Log.e("Teacher Array 3", response1);
                 Log.e("Teacher Array 4", response2);
-                teacherArray.add(response1 + ", "+response2);
+                teacherArray.add(response1 + ", "+response2);*/
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -455,16 +506,116 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 JsonResponse = buffer.toString();
-                Log.e("Student Array 1", JsonResponse);
                 JsonResponse = JsonResponse.replace("[","").replace("]","");
-                Log.e("Student Array 2", JsonResponse);
 
-                JSONObject emp=(new JSONObject(JsonResponse));
+                String[] city=JsonResponse.split(",");
+
+                for(int i=0;i<city.length;i++){
+                    JSONObject emp=(new JSONObject(city[i]));
+                    String response=emp.getString("email").toUpperCase().trim();
+                    String.valueOf(studentArray.add(response));
+                }
+
+/*                JSONObject emp=(new JSONObject(JsonResponse));
                 String response1=emp.getString("fname").toLowerCase().trim();
                 String response2=emp.getString("email").toLowerCase().trim();
                 Log.e("Student Array 3", response1);
                 Log.e("Student Array 4", response2);
-                studentArray.add(response1 + ", "+response2);
+                studentArray.add(response1 + ", "+response2);*/
+
+                return JsonResponse;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ERROR", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private class SendDataToServer extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String JsonResponse = null;
+            String JsonDATA = params[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(addCoachingRecord);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                writer.close();
+                // Log.e("error---", JsonDATA);
+
+                //getting the response
+                InputStream inputStream = urlConnection.getInputStream();
+
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    return null;
+                }
+
+                JsonResponse = buffer.toString();
+                String str = JsonResponse.toString().trim().toLowerCase();
+
+                // Log.e("response---", str);
+
+                if(str.equals("true") || str.equals(1) || str.equals("1")){
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+//                                Intent i = new Intent(CoachingActivity.this, HomeActivity.class);
+//                                startActivity(i);
+                            finish();  //close this activity
+                        }
+                    });
+                }
+
+                else {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(AddStudentActivity.this, "Error in record submission", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
