@@ -31,7 +31,6 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.TeacherHomeActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

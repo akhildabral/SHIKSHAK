@@ -207,47 +207,6 @@ public class HomeFragment extends Fragment {
 
                 Log.e("response---", str);
 
-/*                if(str.equals("true") || str.equals(1) || str.equals("1")){
-                    if (txtaccount.equals("student")) {
-
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(ProfileActivity.this, HomeActivity.class);
-                                startActivity(i);
-                                finish();  //close this activity
-                            }
-                        });
-                    } else if (txtaccount.equals("teacher")) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(ProfileActivity.this, TeacherHomeActivity.class);
-                                startActivity(i);
-                                finish();  //close this activity
-                            }
-                        });
-                    }
-                    else {
-                        Toast.makeText(ProfileActivity.this, "Error: Choose a radio button.", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                else {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Toast.makeText(ProfileActivity.this, "Error in Profile Creation", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }*/
-
                 return JsonResponse;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
