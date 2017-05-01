@@ -2,16 +2,15 @@ package com.tutor.shikshak.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +37,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private EditText txtfname, txtlname, txtemail, txtpassword, txtcofmpassword, txtphone;
     private ImageView txtpicture;
-    private static String txtaccount = "";
     private Button btn_submit;
     private String iFname, iLname, iEmail, iPassword, iCfrnPassword, iPhone, iPicture, iAccount;
 
@@ -68,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 .into(txtpicture);
     }
 
-    public void onRadioButtonClicked(View view) {
+/*    public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -82,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     txtaccount = "student";
                     break;
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -93,10 +91,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         iCfrnPassword = txtcofmpassword.getText().toString();
         iPhone = txtphone.getText().toString();
         iPicture = loginObj.userPhotoUrl();
-        iAccount = txtaccount;
 
         if((iPassword.equals(iCfrnPassword))){
-            if(iAccount.equals("student") | iAccount.equals("teacher")){
                 try {
                     jsonObj.put("fname", iFname);
                     jsonObj.put("lname", iLname);
@@ -112,17 +108,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if (jsonObj.length() > 0) {
                     new SendDataToServer().execute(String.valueOf(jsonObj));
                 }
-            }
-            else {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        Toast.makeText(ProfileActivity.this, "Please choose the account", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
         }
         else {
             Handler handler = new Handler(Looper.getMainLooper());
@@ -181,9 +167,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 Log.e("response---", str);
 
-                if(str.equals("true") || str.equals(1) || str.equals("1")){
-                    if (txtaccount.equals("student")) {
-
+                if(str.equals("true")){
                         Handler handler = new Handler(Looper.getMainLooper());
                         handler.post(new Runnable() {
 
@@ -194,21 +178,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 finish();  //close this activity
                             }
                         });
-                    } else if (txtaccount.equals("teacher")) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(ProfileActivity.this, TeacherHomeActivity.class);
-                                startActivity(i);
-                                finish();  //close this activity
-                            }
-                        });
-                    }
-                    else {
-                        Toast.makeText(ProfileActivity.this, "Error: Choose a radio button.", Toast.LENGTH_LONG).show();
-                    }
                 }
 
                 else {

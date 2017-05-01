@@ -102,9 +102,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
 
             personName = acct.getDisplayName();
-            //personPhotoUrl = acct.getPhotoUrl().toString();
+            personPhotoUrl = acct.getPhotoUrl().toString();
+            if(personPhotoUrl.equals(null))
+                personPhotoUrl = "unknown";
             email = acct.getEmail();
-           // Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
+            Log.e(TAG, "user picture: " + acct.getPhotoUrl().toString());
             senddatatoserver();
         } else {
             // Signed out, show unauthenticated UI.
@@ -320,22 +322,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 finish();
                             }
                         });
-                  /*  }
-
-                    else if(response.equals("teacher")){
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(LoginActivity.this, TeacherHomeActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
-                    }
-
-                    else {
-                        Toast.makeText(LoginActivity.this, "An error occurred.", Toast.LENGTH_LONG).show();
-                    }*/
                 }
 
                 return JsonResponse;
@@ -446,22 +432,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 finish();
                             }
                         });
-/*                    }
-
-                    else if(response.equals("teacher")){
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(LoginActivity.this, TeacherHomeActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
-                    }
-
-                    else {
-                        Toast.makeText(LoginActivity.this, "An error occurred in Signin.", Toast.LENGTH_LONG).show();
-                    }*/
                 }
 
                 return JsonResponse;

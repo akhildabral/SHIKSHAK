@@ -63,31 +63,6 @@
             android:text=""
             android:inputType="phone"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose an option"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
-        <RadioGroup
-            android:paddingTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_teacher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Teacher"
-                android:layout_weight="0.5"
-                android:onClick="onRadioButtonClicked"/>
-            <RadioButton android:id="@+id/radio_student"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"
-                android:text="Student"
-                android:onClick="onRadioButtonClicked"/>
-        </RadioGroup>
-
         <ImageView
             android:id="@+id/imgProfilePic"
             android:layout_width="80dp"
