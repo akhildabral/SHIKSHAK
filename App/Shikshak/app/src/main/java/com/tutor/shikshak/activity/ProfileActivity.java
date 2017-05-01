@@ -102,8 +102,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     jsonObj.put("lname", iLname);
                     jsonObj.put("password", iPassword);
                     jsonObj.put("phone", iPhone);
-                    jsonObj.put("account", iAccount);
-                    jsonObj.put("picture", iPicture);
+                    //jsonObj.put("account", iAccount);
+                    jsonObj.put("picture", "unknown");
                     jsonObj.put("email", iEmail);
                 }
                 catch (JSONException e) {

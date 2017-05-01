@@ -265,8 +265,8 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
                     String response=emp.getString("name").toUpperCase().trim();
                     String.valueOf(coachingArray.add(response));
                 }
-                coachingArray.remove("Choose Coaching");
-                //  Log.e("RESULT", String.valueOf(cityArray));
+                //coachingArray.remove("Choose Coaching");
+                Log.e("coaching array", String.valueOf(coachingArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -336,8 +336,8 @@ public class BatchActivity extends AppCompatActivity implements View.OnClickList
                     String response=emp.getString("subject_name").toUpperCase().trim();
                     String.valueOf(subjectArray.add(response));
                 }
-                subjectArray.remove("Choose City");
-                //  Log.e("RESULT", String.valueOf(cityArray));
+                //subjectArray.remove("Choose City");
+                Log.e("subject array", String.valueOf(subjectArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {

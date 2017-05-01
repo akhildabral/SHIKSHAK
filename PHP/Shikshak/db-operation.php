@@ -33,8 +33,8 @@ $app->post('/addBatch', function($request, $response, $args) {
      getCoaching($args['email']);
  });
 
-  $app->post('/getBatch/{email}', function($request, $response, $args) {
-     getBatch($args['email']);
+  $app->post('/getBatch', function($request, $response, $args) {
+     getBatch($request->getParsedBody());
  });
 
 $app->post('/getTeacher', function($request, $response, $args) {
@@ -85,9 +85,9 @@ function getCoaching($email) {
     echo json_encode($data);
 }
 
-function getBatch($email) {
+function getBatch($data) {
     $db = connect_db();
-    $sql = "SELECT batch_name FROM batch WHERE `email` = '$email' ORDER BY `batch_name`";
+    $sql = "SELECT batch_name FROM batch WHERE `email` = '$data[email]' AND `coaching_name` = '$data[coaching_name]' ORDER BY `batch_name`";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;
@@ -135,8 +135,8 @@ function getSignIn($email) {
 
 function addUser($data) {
     $db = connect_db();
-    $sql = "insert into user (fname,lname,password,phone,account,picture,email)"
-            . " VALUES('$data[fname]','$data[lname]','$data[password]','$data[phone]','$data[account]','$data[picture]','$data[email]')";
+    $sql = "insert into user (fname,lname,password,phone,picture,email)"
+            . " VALUES('$data[fname]','$data[lname]','$data[password]','$data[phone]','$data[picture]','$data[email]')";
     $exe = $db->query($sql);
     $last_id = $db->insert_id;
     $db = null;
@@ -186,7 +186,8 @@ function addBatch($data) {
 
 function getTeacher($data) {
     $db = connect_db();
-    $sql = "select fname, email from user where email = (select email from user_request where relation = 'teacher' AND batch = (select batch_id from batch where batch_name = '$data[batch_name]'))";
+   // $sql = "select fname, email from user where email = (select email from user_request where relation = 'teacher' AND batch = (select batch_id from batch where batch_name = '$data[batch_name]'))";
+    $sql = "select u.fname, u.email from user u LEFT JOIN user_request ur ON u.email = ur.email LEFT JOIN batch ba ON ba.batch_id = ur.batch WHERE ur.relation = 'teacher' AND batch_name = '$data[batch_name]' AND coaching_name = '$data[coaching_name]'";
     // join
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
@@ -196,7 +197,7 @@ function getTeacher($data) {
 
 function getStudent($data) {
     $db = connect_db();
-// join    $sql = "select fname, email from user where email = (select email from user_request where relation = 'student' AND batch = (select batch_id from batch where batch_name = '$data[batch_name]'))";
+    $sql = "select u.fname, u.email from user u LEFT JOIN user_request ur ON u.email = ur.email LEFT JOIN batch ba ON ba.batch_id = ur.batch WHERE ur.relation = 'student' AND batch_name = '$data[batch_name]' AND coaching_name = '$data[coaching_name]'";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;

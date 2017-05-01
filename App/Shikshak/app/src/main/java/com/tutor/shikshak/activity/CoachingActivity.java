@@ -263,8 +263,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
                     String response=emp.getString("name").toUpperCase().trim();
                     String.valueOf(cityArray.add(response));
                 }
-                cityArray.remove("Choose City");
-              //  Log.e("RESULT", String.valueOf(cityArray));
+                //cityArray.remove("Choose City");
+                Log.e("city array", String.valueOf(cityArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -335,7 +335,8 @@ public class CoachingActivity extends AppCompatActivity implements View.OnClickL
                     String response=emp.getString("name").toUpperCase().trim();
                     String.valueOf(colonyArray.add(response));
                 }
-                colonyArray.remove("Choose Colony");
+                //colonyArray.remove("Choose Colony");
+                Log.e("colony array", String.valueOf(cityArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {

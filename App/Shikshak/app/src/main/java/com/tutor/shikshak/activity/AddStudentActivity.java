@@ -6,10 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.tutor.shikshak.R;
 
@@ -36,8 +37,7 @@ import static com.tutor.shikshak.other.Constants.getTeacher;
 public class AddStudentActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar toolbar;
-    private EditText batch_subject, batch_time;
-    private String coaching, batch, teacher, subject, time, student;
+    private String coaching, batch, teacher, student;
     private Button buttonBatch;
     private Spinner coaching_spinner, batch_spinner, teacher_spinner, student_spinner;
 
@@ -59,8 +59,6 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
         setToolbarTitle();
 
-        batch_subject = (EditText) findViewById(R.id.choose_subject);
-        batch_time = (EditText) findViewById(R.id.choose_time);
         buttonBatch = (Button) findViewById(R.id.button_submit);
         coaching_spinner = (Spinner) findViewById(R.id.choose_coaching);
         batch_spinner = (Spinner) findViewById(R.id.choose_batch);
@@ -74,26 +72,64 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
         coaching_spinner.setAdapter(coachingAdapter);
 
         batchArray.add("Choose Batch");
-        coaching = String.valueOf(coaching_spinner.getSelectedItem());
-        if(!coaching.equals("") || !coaching.equals("Choose Coaching")){
-            Log.e("Coaching Name:", coaching);
-            sendCoachingForBatch(coaching);
-        }
+//        coaching = String.valueOf(coaching_spinner.getSelectedItem());
+
+        coaching_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                coaching = String.valueOf(coaching_spinner.getSelectedItem());
+               // Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                if((!coaching.equals("Choose Coaching"))){
+                    Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                    batchArray.clear();
+                    batch_spinner.setSelection(0);
+                    batchArray.add("Choose Batch");
+                    sendCoachingForBatch(coaching);
+
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing, just another required interface callback
+            }
+        }); // (optional)
+
         ArrayAdapter<String> batchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, batchArray);
         batchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         batch_spinner.setAdapter(batchAdapter);
-
         teacherArray.add("Choose Teacher");
-        batch = String.valueOf(batch_spinner.getSelectedItem());
-        if(!batch.equals("") || !batch.equals("Choose Batch")){
-            Log.e("Batch Name:", batch);
-            sendBatchForTeacher(batch);
-        }
+        studentArray.add("Choose Student");
+
+        batch_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                batch = String.valueOf(batch_spinner.getSelectedItem());
+                // Toast.makeText(AddStudentActivity.this, String.valueOf(coaching_spinner.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                if((!batch.equals("Choose Batch"))){
+                    teacherArray.clear();
+                    teacher_spinner.setSelection(0);
+                    teacherArray.add("Choose Teacher");
+
+                    studentArray.clear();
+                    student_spinner.setSelection(0);
+                    studentArray.add("Choose Student");
+
+                    sendBatchForTeacher(batch, coaching);
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing, just another required interface callback
+            }
+        }); // (optional)
+
         ArrayAdapter<String> teacherAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teacherArray);
         teacherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         teacher_spinner.setAdapter(teacherAdapter);
 
-        studentArray.add("Choose Student");
+
         ArrayAdapter<String> studentAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, studentArray);
         studentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         student_spinner.setAdapter(studentAdapter);
@@ -105,7 +141,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-
+        //subject = batch_subject.getText().toString();
     }
 
     public void sendEmailForCoaching() {
@@ -128,6 +164,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
 
         try {
             json_obj.put("coaching_name", str.toUpperCase());
+            json_obj.put("email", userEmail);
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -138,11 +175,12 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void sendBatchForTeacher(String str) {
+    public void sendBatchForTeacher(String batch, String coaching) {
         JSONObject json_obj = new JSONObject();
 
         try {
-            json_obj.put("batch_name", str.toLowerCase());
+            json_obj.put("batch_name", batch);
+            json_obj.put("coaching_name", coaching);
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -203,7 +241,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                     String.valueOf(coachingArray.add(response));
                 }
                 //coachingArray.remove("Choose Coaching");
-                //  Log.e("RESULT", String.valueOf(cityArray));
+                Log.e("coaching array", String.valueOf(coachingArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -240,7 +278,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
             BufferedReader reader = null;
 
             try {
-                URL url = new URL(getBatch + userEmail);
+                URL url = new URL(getBatch);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
 
@@ -278,7 +316,7 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                     String.valueOf(batchArray.add(response));
                 }
                 //coachingArray.remove("Choose Coaching");
-                //  Log.e("RESULT", String.valueOf(cityArray));
+                Log.e("batch array", String.valueOf(batchArray));
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -343,18 +381,16 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 JsonResponse = buffer.toString();
+                Log.e("Teacher Array 1", JsonResponse);
                 JsonResponse = JsonResponse.replace("[","").replace("]","");
+                Log.e("Teacher Array 2", JsonResponse);
 
-                String[] city=JsonResponse.split(",");
-
-                for(int i=0;i<city.length;i++){
-                    JSONObject emp=(new JSONObject(city[i]));
-                    String fname=emp.getString("fname").toUpperCase().trim();
-                    String email=emp.getString("email").toLowerCase().trim();
-                    String.valueOf(teacherArray.add(fname + ", "+email));
-                }
-                //coachingArray.remove("Choose Coaching");
-                Log.e("Teacher Array", String.valueOf(teacherArray));
+                JSONObject emp=(new JSONObject(JsonResponse));
+                String response1=emp.getString("fname").toLowerCase().trim();
+                String response2=emp.getString("email").toLowerCase().trim();
+                Log.e("Teacher Array 3", response1);
+                Log.e("Teacher Array 4", response2);
+                teacherArray.add(response1 + ", "+response2);
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
@@ -419,18 +455,16 @@ public class AddStudentActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 JsonResponse = buffer.toString();
+                Log.e("Student Array 1", JsonResponse);
                 JsonResponse = JsonResponse.replace("[","").replace("]","");
+                Log.e("Student Array 2", JsonResponse);
 
-                String[] city=JsonResponse.split(",");
-
-                for(int i=0;i<city.length;i++){
-                    JSONObject emp=(new JSONObject(city[i]));
-                    String fname=emp.getString("fname").toUpperCase().trim();
-                    String email=emp.getString("email").toUpperCase().trim();
-                    String.valueOf(studentArray.add(fname+", "+email));
-                }
-                //coachingArray.remove("Choose Coaching");
-                Log.e("Student Array", String.valueOf(studentArray));
+                JSONObject emp=(new JSONObject(JsonResponse));
+                String response1=emp.getString("fname").toLowerCase().trim();
+                String response2=emp.getString("email").toLowerCase().trim();
+                Log.e("Student Array 3", response1);
+                Log.e("Student Array 4", response2);
+                studentArray.add(response1 + ", "+response2);
 
                 return JsonResponse;
             } catch (MalformedURLException e) {
