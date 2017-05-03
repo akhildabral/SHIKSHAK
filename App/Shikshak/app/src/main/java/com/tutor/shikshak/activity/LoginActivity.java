@@ -39,6 +39,7 @@ import java.net.URL;
 
 import static com.tutor.shikshak.other.Constants.logInUrl;
 import static com.tutor.shikshak.other.Constants.signInUrl;
+import static com.tutor.shikshak.other.Constants.userImage;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -102,11 +103,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //Log.e(TAG, "display email: " + acct.getPhotoUrl().toString());
 
             personName = acct.getDisplayName();
-            personPhotoUrl = acct.getPhotoUrl().toString();
-            if(personPhotoUrl.equals(null))
-                personPhotoUrl = "unknown";
             email = acct.getEmail();
-            Log.e(TAG, "user picture: " + acct.getPhotoUrl().toString());
+            personPhotoUrl = acct.getPhotoUrl().toString();
+
+            Log.e(TAG, "user picture: " + "" +acct.getPhotoUrl().toString());
+
+            if(personPhotoUrl.equals(null))
+                personPhotoUrl = userImage;
+
             senddatatoserver();
         } else {
             // Signed out, show unauthenticated UI.
@@ -213,8 +217,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }*/
 
-    public String userName(){
+    public String userFirstName(){
         this.personName = personName;
+        String[] fname = personName.split(" ");
+        String personName = fname[0];
+        return personName;
+    }
+
+    public String userLastName(){
+        this.personName = personName;
+        String[] lname = personName.split(" ");
+        String personName = lname[1];
         return personName;
     }
 

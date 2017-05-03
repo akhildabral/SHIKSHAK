@@ -37,7 +37,11 @@ $app->post('/addCoachingRecord', function($request, $response, $args) {
      getCoaching($args['email']);
  });
 
-  $app->post('/getBatch', function($request, $response, $args) {
+  $app->post('/getBatchforCoaching', function($request, $response, $args) {
+     getBatchforCoaching($request->getParsedBody());
+ });
+
+   $app->post('/getBatch', function($request, $response, $args) {
      getBatch($request->getParsedBody());
  });
 
@@ -59,6 +63,10 @@ $app->post('/getColony', function($request, $response, $args) {
 
 $app->post('/getSubject', function($request, $response, $args) {
     getSubject($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
+});
+
+$app->post('/getAllCoaching', function($request, $response, $args) {
+    getAllCoaching($request->getParsedBody());//Request object’s <code>getParsedBody()</code> method to parse the HTTP request 
 });
 
 $app->put('/update_employee', function($request, $response, $args) {
@@ -83,6 +91,24 @@ function getUsers() {
 function getCoaching($email) {
     $db = connect_db();
     $sql = "SELECT name FROM coaching WHERE `owner` = '$email' ORDER BY `name`";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getAllCoaching() {
+    $db = connect_db();
+    $sql = "SELECT name FROM coaching ORDER BY `name`";
+    $exe = $db->query($sql);
+    $data = $exe->fetch_all(MYSQLI_ASSOC);
+    $db = null;
+    echo json_encode($data);
+}
+
+function getBatchforCoaching($data) {
+    $db = connect_db();
+    $sql = "SELECT batch_name FROM batch WHERE `coaching_name` = '$data[coaching_name]' ORDER BY `batch_name`";
     $exe = $db->query($sql);
     $data = $exe->fetch_all(MYSQLI_ASSOC);
     $db = null;

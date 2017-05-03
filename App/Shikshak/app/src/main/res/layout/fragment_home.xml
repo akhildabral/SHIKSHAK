@@ -19,50 +19,63 @@
         android:id="@+id/linear_child"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorAccent"
-        android:layout_weight="5">
+        android:orientation="vertical"
+        android:background="@color/colorAccent">
 
         <TextView
-            android:id="@+id/batch_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Batch Name"
-            android:layout_weight="2"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
+            android:text="coaching name"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="colony"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="city"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <TextView
-            android:id="@+id/batch_sub"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Subject"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1"/>
+            android:text="batch name"/>
 
-        <TextView
-            android:id="@+id/batch_time"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp"
-            android:layout_weight="1"/>
+            android:layout_weight="3"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/batch_fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Fees"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="subject"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="fees"/>
+
+        </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

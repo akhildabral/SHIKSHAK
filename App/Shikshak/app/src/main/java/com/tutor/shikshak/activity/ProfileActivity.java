@@ -58,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btn_submit = (Button) findViewById(R.id.button_profile);
         btn_submit.setOnClickListener(this);
 
+        txtfname.setText(loginObj.userFirstName());
+        txtlname.setText(loginObj.userLastName());
         txtemail.setText(loginObj.userEmail());
         Glide.with(getApplicationContext()).load(loginObj.userPhotoUrl())
                 .thumbnail(0.5f)

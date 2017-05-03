@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:hint="First Name"
+            android:enabled="false"
             android:inputType="text"/>
 
         <EditText
@@ -29,6 +30,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:hint="Last Name"
+            android:enabled="false"
             android:inputType="text"/>
 
         <EditText

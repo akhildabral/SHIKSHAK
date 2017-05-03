@@ -19,4 +19,10 @@ public interface Constants {
     public static final String getColony = "http://192.168.0.102/Shikshak/db-operation.php/getColony";
     public static final String getSubject = "http://192.168.0.102/Shikshak/db-operation.php/getSubject";
     public static final String addCoachingRecord = "http://192.168.0.102/Shikshak/db-operation.php/addCoachingRecord";
+    public static final String getAllCoaching = "http://192.168.0.102/Shikshak/db-operation.php/getAllCoaching";
+    public static final String getBatchforCoaching = "http://192.168.0.102/Shikshak/db-operation.php/getBatchforCoaching";
+
+    public static final String userImage = "https://d30y9cdsu7xlg0.cloudfront.net/png/15724-200.png";
+    public static final String userBg = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
+
 }

@@ -34,6 +34,8 @@ import com.tutor.shikshak.fragment.NotificationsFragment;
 import com.tutor.shikshak.fragment.SettingsFragment;
 import com.tutor.shikshak.other.CircleTransform;
 
+import static com.tutor.shikshak.other.Constants.userBg;
+
 public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener, JoinCoachingFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, View.OnClickListener{
 
     private NavigationView navigationView;
@@ -47,10 +49,12 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
     private FloatingActionButton fab,fab1,fab2,fab3;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
+    static LoginActivity obj = new LoginActivity();
+
     // urls to load navigation header background image
     // and profile image
-    private static final String urlNavHeaderBg = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String urlProfileImg = "https://lh3.googleusercontent.com/eCtE_G34M9ygdkmOpYvCag1vBARCmZwnVS6rS5t4JLzJ6QgQSBquM0nuTsCpLhYbKljoyS-txg";
+    private static final String urlNavHeaderBg = userBg;
+    private static final String urlProfileImg = obj.userPhotoUrl();
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -185,8 +189,8 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.OnFr
      */
     private void loadNavHeader() {
         // name, website
-        txtName.setText("Ravi Tamada");
-        txtWebsite.setText("www.androidhive.info");
+        txtName.setText(obj.userFirstName()+" "+obj.userLastName());
+        txtWebsite.setText(obj.userEmail());
 
         // loading header background image
         Glide.with(this).load(urlNavHeaderBg)
